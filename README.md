@@ -15,21 +15,27 @@ Polished setup for a **non-rooted** Moto G Stylus 2024 (stock Android 14/15) run
 
 ## One-liner bootstrap (Termux)
 
-```bash
-curl -fsSL 'RAW_URL_PLACEHOLDER' | bash
-```
-
-Or download the tarball, verify SHA256, extract, run `./setup.sh`:
+Verified tarball (recommended):
 
 ```bash
-cd ~
-curl -fsSL -o nethunter-kit.tgz 'TARBALL_URL_PLACEHOLDER'
-echo 'SHA256_PLACEHOLDER  nethunter-kit.tgz' | sha256sum -c -
-tar -xzf nethunter-kit.tgz
-cd nethunter-kit && bash setup.sh
+pkg install -y curl tar && \
+curl -fsSL -o nethunter-kit.tgz \
+  https://github.com/blake2232/nethunter-rootless-kit/releases/download/v1.0.0/nethunter-kit.tgz && \
+echo '0dfc52ddf43cf8b1b51d99a7d7e54de443195658114182c641fb88ea6e9f7b7c  nethunter-kit.tgz' | sha256sum -c - && \
+tar -xzf nethunter-kit.tgz && cd nethunter-kit && bash setup.sh
 ```
 
-*(URLs and SHA256 are filled in when the kit is published — see the release note that shipped with your copy.)*
+Clone alternative:
+
+```bash
+pkg install -y git && \
+git clone https://github.com/blake2232/nethunter-rootless-kit.git ~/nethunter-kit && \
+cd ~/nethunter-kit && bash setup.sh
+```
+
+Repo: https://github.com/blake2232/nethunter-rootless-kit  
+Release: https://github.com/blake2232/nethunter-rootless-kit/releases/tag/v1.0.0  
+**SHA256** (`nethunter-kit.tgz`): `0dfc52ddf43cf8b1b51d99a7d7e54de443195658114182c641fb88ea6e9f7b7c`
 
 ## Prerequisites
 
