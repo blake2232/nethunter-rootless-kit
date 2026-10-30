@@ -21,7 +21,7 @@ Verified tarball (recommended):
 pkg install -y curl tar && \
 curl -fsSL -o nethunter-kit.tgz \
   https://github.com/blake2232/nethunter-rootless-kit/releases/download/v1.0.0/nethunter-kit.tgz && \
-echo '0dfc52ddf43cf8b1b51d99a7d7e54de443195658114182c641fb88ea6e9f7b7c  nethunter-kit.tgz' | sha256sum -c - && \
+echo '4db9536bf8c15414abddc0cbe11d5ce0003a2ff01eb86b69638337a25095f180  nethunter-kit.tgz' | sha256sum -c - && \
 tar -xzf nethunter-kit.tgz && cd nethunter-kit && bash setup.sh
 ```
 
@@ -35,7 +35,7 @@ cd ~/nethunter-kit && bash setup.sh
 
 Repo: https://github.com/blake2232/nethunter-rootless-kit  
 Release: https://github.com/blake2232/nethunter-rootless-kit/releases/tag/v1.0.0  
-**SHA256** (`nethunter-kit.tgz`): `0dfc52ddf43cf8b1b51d99a7d7e54de443195658114182c641fb88ea6e9f7b7c`
+**SHA256** (`nethunter-kit.tgz`): `4db9536bf8c15414abddc0cbe11d5ce0003a2ff01eb86b69638337a25095f180`
 
 ## Prerequisites
 
