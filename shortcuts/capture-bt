@@ -1,0 +1,24 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Termux:Widget — Capture Bluetooth HCI snoop via bugreport
+set -euo pipefail
+export PATH="${PATH}:${HOME}/bin:${PREFIX}/bin:${HOME}/.local/bin"
+
+BTCAP="${HOME}/bin/btcap.sh"
+[[ -x "${BTCAP}" ]] || BTCAP="${HOME}/nethunter-kit/btcap.sh"
+[[ -x "${BTCAP}" ]] || { echo "[x] btcap.sh not found"; exit 1; }
+
+echo "[*] Bluetooth HCI capture"
+echo "    Ensure Developer options → Bluetooth HCI snoop log is ON,"
+echo "    Wireless debugging is paired, and adb devices shows this phone."
+echo
+
+# Prefer already-connected wireless debugging device
+if ! adb devices 2>/dev/null | awk 'NR>1 && $2=="device"{found=1} END{exit !found}'; then
+  echo "[!] No adb device connected."
+  echo "    Pair:  adb pair <IP>:<PAIR_PORT>"
+  echo "    Connect: adb connect <IP>:<PORT>"
+  echo "    Then re-run this shortcut."
+  exit 1
+fi
+
+exec "${BTCAP}"

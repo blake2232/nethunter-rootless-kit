@@ -1,0 +1,26 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Termux:Widget — Start NetHunter KeX (root-in-chroot desktop)
+set -euo pipefail
+export PATH="${PATH}:${HOME}/bin:${PREFIX}/bin"
+
+echo "[*] Starting NetHunter KeX…"
+if command -v nh >/dev/null 2>&1; then
+  NH=nh
+elif command -v nethunter >/dev/null 2>&1; then
+  NH=nethunter
+else
+  echo "[x] nethunter/nh not found. Run setup.sh first."
+  exit 1
+fi
+
+# Ensure a password exists (first-run friendly)
+if ! "${NH}" -r bash -lc 'test -f /root/.vnc/passwd' 2>/dev/null; then
+  echo "[!] No KeX password yet. Run once in Termux:  nh -r kex passwd"
+fi
+
+# Stop stale sessions, then start
+"${NH}" -r kex stop >/dev/null 2>&1 || true
+"${NH}" -r kex &
+echo "[+] KeX starting. Open the NetHunter KeX app and connect."
+echo "    Tip: set a custom resolution under Advanced Settings."
+sleep 2

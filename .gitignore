@@ -1,0 +1,4 @@
+.venv/
+testdata/btcap-run/
+*.pyc
+__pycache__/

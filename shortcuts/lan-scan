@@ -1,0 +1,50 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Termux:Widget — Quick host discovery on the phone's own wlan0 /24
+# ONLY scan networks you own or have explicit permission to test.
+set -euo pipefail
+export PATH="${PATH}:${HOME}/bin:${PREFIX}/bin"
+
+echo "[*] LAN discovery (your current Wi-Fi /24 only)"
+echo "[!] Authorized use only — your own network."
+echo
+
+# Prefer Kali nmap; fall back to Termux if present
+NMAP=""
+if command -v nh >/dev/null 2>&1 && nh -r bash -lc 'command -v nmap' >/dev/null 2>&1; then
+  NMAP="nh -r nmap"
+elif command -v nethunter >/dev/null 2>&1 && nethunter -r bash -lc 'command -v nmap' >/dev/null 2>&1; then
+  NMAP="nethunter -r nmap"
+elif command -v nmap >/dev/null 2>&1; then
+  NMAP="nmap"
+else
+  echo "[x] nmap not found. Re-run setup.sh"
+  exit 1
+fi
+
+# Discover wlan0 (or first wifi iface) IPv4
+IP_CIDR="$(ip -4 -o addr show wlan0 2>/dev/null | awk '{print $4; exit}')"
+IFACE="wlan0"
+if [[ -z "${IP_CIDR}" ]]; then
+  # Fallback: first non-loopback IPv4
+  read -r IFACE IP_CIDR < <(ip -4 -o addr show scope global | awk '{print $2,$4; exit}')
+fi
+[[ -n "${IP_CIDR}" ]] || { echo "[x] No IPv4 address found (Wi-Fi up?)"; exit 1; }
+
+# Build /24 from address (ignore actual prefix — widget is intentionally /24)
+IP="${IP_CIDR%%/*}"
+IFS=. read -r a b c _ <<< "${IP}"
+SUBNET="${a}.${b}.${c}.0/24"
+
+OUT="${HOME}/storage/downloads/lan-scan-$(date +%Y%m%d-%H%M%S).txt"
+[[ -d "${HOME}/storage/downloads" ]] || OUT="${HOME}/lan-scan-$(date +%Y%m%d-%H%M%S).txt"
+
+echo "Interface : ${IFACE}"
+echo "Address   : ${IP_CIDR}"
+echo "Scan      : nmap -sn ${SUBNET}"
+echo "Output    : ${OUT}"
+echo
+
+# shellcheck disable=SC2086
+${NMAP} -sn --host-timeout 3s "${SUBNET}" | tee "${OUT}"
+echo
+echo "[+] Done → ${OUT}"
